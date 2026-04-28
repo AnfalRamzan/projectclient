@@ -3,1363 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>FinCollect Pro | Premium Due Management with MySQL</title>
+    <title>Customer Due Manager | Pakistan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background: #f0f4f9;
-            min-height: 100vh;
-        }
-
-        /* ========== ELEGANT LOGIN SCREEN ========== */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #0b1120 0%, #111827 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .login-card {
-            background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(2px);
-            border-radius: 56px;
-            padding: 48px 44px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 35px 65px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .login-brand {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        .logo-circle {
-            width: 85px;
-            height: 85px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            box-shadow: 0 12px 25px -8px rgba(0,0,0,0.2);
-        }
-        .logo-circle i {
-            font-size: 42px;
-            color: white;
-        }
-        .login-brand h2 {
-            font-size: 1.9rem;
-            font-weight: 800;
-            color: #0f172a;
-            letter-spacing: -0.5px;
-        }
-        .login-brand p {
-            color: #5b6e8c;
-            font-size: 0.85rem;
-            margin-top: 6px;
-            font-weight: 500;
-        }
-
-        .input-group {
-            margin-bottom: 22px;
-        }
-        .input-group label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #334155;
-            margin-bottom: 8px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 15px 18px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 34px;
-            font-size: 0.95rem;
-            background: #ffffff;
-            transition: all 0.2s;
-        }
-        .input-group input:focus {
-            outline: none;
-            border-color: #0f172a;
-            box-shadow: 0 0 0 3px rgba(15,23,42,0.08);
-        }
-
-        .login-button {
-            width: 100%;
-            background: linear-gradient(95deg, #0f172a, #1e293b);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 44px;
-            font-weight: 800;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.25s;
-            margin-top: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 8px 20px -6px rgba(0,0,0,0.2);
-        }
-        .login-button:hover {
-            background: linear-gradient(95deg, #1e293b, #0f172a);
-            transform: translateY(-2px);
-        }
-
-        .role-switch {
-            display: flex;
-            gap: 14px;
-            margin: 28px 0 16px;
-            background: #f1f5f9;
-            padding: 5px;
-            border-radius: 60px;
-        }
-        .role-tab {
-            flex: 1;
-            text-align: center;
-            padding: 11px 8px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #475569;
-        }
-        .role-tab.active {
-            background: white;
-            color: #0f172a;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .error-message {
-            background: #fef2f2;
-            color: #dc2626;
-            padding: 12px;
-            border-radius: 28px;
-            margin-bottom: 18px;
-            display: none;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        /* ========== MAIN APP ========== */
-        .app-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 24px 28px;
-            display: none;
-        }
-
-        /* premium header */
-        .premium-header {
-            background: white;
-            border-radius: 32px;
-            padding: 14px 28px;
-            margin-bottom: 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            border: 1px solid #eef2ff;
-        }
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .brand-icon {
-            background: #0f172a;
-            width: 48px;
-            height: 48px;
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .brand h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #0f172a;
-        }
-        .pkr-tag {
-            background: #eef2ff;
-            color: #1e3a8a;
-            font-size: 0.65rem;
-            padding: 4px 12px;
-            border-radius: 30px;
-            margin-left: 8px;
-        }
-        .db-status {
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-left: 10px;
-            font-weight: 600;
-        }
-        .db-online {
-            background: #10b981;
-            color: white;
-        }
-        .db-offline {
-            background: #f59e0b;
-            color: white;
-        }
-        .header-tools {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .role-indicator {
-            background: #f1f5f9;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-        .tool-icon {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .sync-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-        }
-        .sync-btn:hover {
-            background: #059669;
-        }
-        .logout-icon {
-            background: none;
-            border: 1px solid #e2e8f0;
-            color: #475569;
-        }
-
-        /* Stats */
-        .stat-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 22px;
-            margin-bottom: 28px;
-        }
-        .stat-item {
-            background: white;
-            border-radius: 28px;
-            padding: 22px 26px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            border: 1px solid #edf2f7;
-        }
-        .stat-icon-bg {
-            width: 58px;
-            height: 58px;
-            background: #f8fafc;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* search  */
-        .search-bar-area {
-            background: white;
-            border-radius: 32px;
-            padding: 16px 24px;
-            margin-bottom: 28px;
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-            align-items: center;
-            border: 1px solid #edf2f7;
-        }
-        .search-flex {
-            flex: 2;
-            position: relative;
-        }
-        .search-flex i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-        }
-        .search-flex input {
-            width: 100%;
-            padding: 14px 20px 14px 52px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 60px;
-            font-size: 0.9rem;
-        }
-        .mic-search-btn {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #f1f5f9;
-            border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: #0f172a;
-            transition: 0.2s;
-        }
-        .filter-group {
-            display: flex;
-            gap: 12px;
-        }
-        .filter-chip {
-            padding: 8px 28px;
-            border-radius: 60px;
-            background: #f1f5f9;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .filter-chip.active {
-            background: #0f172a;
-            color: white;
-        }
-        .add-customer {
-            background: #0f172a;
-            color: white;
-            padding: 10px 28px;
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* table + panels */
-        .two-column {
-            display: flex;
-            gap: 28px;
-            flex-wrap: wrap;
-        }
-        .data-table-wrap {
-            flex: 2.5;
-            background: white;
-            border-radius: 28px;
-            overflow-x: auto;
-            border: 1px solid #edf2f7;
-        }
-        .modern-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
-        }
-        .modern-table th {
-            padding: 18px 16px;
-            text-align: left;
-            background: #fafcff;
-            font-weight: 700;
-            color: #1e293b;
-        }
-        .modern-table td {
-            padding: 15px 16px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .due-highlight {
-            border-left: 3px solid #dc2626;
-        }
-        .photo-round {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-        }
-        .action-group {
-            display: flex;
-            gap: 10px;
-        }
-        .action-badge {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 30px;
-        }
-
-        .right-panels {
-            flex: 1.2;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-        .info-card {
-            background: white;
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid #edf2f7;
-        }
-        .card-header {
-            padding: 18px 22px;
-            font-weight: 800;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #f0f2f5;
-        }
-
-        /* modal with close cross */
-        .modal-mask {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: 0.2s;
-        }
-        .modal-mask.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .modal-content {
-            background: white;
-            width: 92%;
-            max-width: 780px;
-            max-height: 85vh;
-            overflow-y: auto;
-            border-radius: 40px;
-            position: relative;
-            padding: 32px 38px;
-        }
-        .modal-close-x {
-            position: absolute;
-            top: 24px;
-            right: 28px;
-            background: #f1f5f9;
-            width: 38px;
-            height: 38px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            border: none;
-            transition: 0.2s;
-        }
-        .toast-message {
-            position: fixed;
-            bottom: 35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e293b;
-            color: white;
-            padding: 12px 32px;
-            border-radius: 60px;
-            z-index: 4000;
-            display: none;
-            font-weight: 500;
-        }
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @media (max-width: 700px) {
-            .app-container { padding: 16px; }
-            .modal-content { padding: 24px; }
-        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);min-height:100vh;}
+        
+        .login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);display:flex;align-items:center;justify-content:center;z-index:2000;}
+        .login-card{background:white;border-radius:24px;padding:40px;width:90%;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+        .login-icon{width:80px;height:80px;background:linear-gradient(135deg,#1e3c72,#2a5298);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+        .login-icon i{font-size:40px;color:white;}
+        .login-card h2{color:#1a1a2e;}
+        .login-card p{color:#666;margin-bottom:25px;}
+        .login-input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:12px;}
+        .login-input:focus{outline:none;border-color:#1e3c72;}
+        .login-btn{width:100%;background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;border:none;padding:14px;border-radius:12px;cursor:pointer;font-weight:600;}
+        .login-error{color:#dc3545;margin-top:10px;display:none;}
+        
+        .app{max-width:1400px;margin:0 auto;min-height:100vh;background:#f0f2f5;display:none;}
+        .app-header{background:white;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+        .logo{display:flex;align-items:center;gap:12px;}
+        .logo i{font-size:28px;color:#1e3c72;}
+        .logo h1{font-size:1.4rem;color:#1a1a2e;}
+        .pkr-badge{background:#28a745;color:white;font-size:0.7rem;padding:3px 8px;border-radius:20px;}
+        .user-info{display:flex;align-items:center;gap:10px;background:#f0f2f5;padding:8px 15px;border-radius:30px;}
+        .role-badge{padding:2px 8px;border-radius:20px;font-size:0.7rem;}
+        .role-badge.admin{background:#dc3545;color:white;}
+        .role-badge.user{background:#28a745;color:white;}
+        .logout-btn{background:none;border:none;color:#dc3545;cursor:pointer;}
+        
+        .main-container{padding:20px;display:flex;gap:20px;flex-wrap:wrap;}
+        .list-view{flex:1;min-width:280px;}
+        .side-panels{width:320px;display:flex;flex-direction:column;gap:20px;}
+        
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;}
+        .stat-card{background:white;border-radius:16px;padding:18px;display:flex;align-items:center;gap:15px;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+        .stat-icon{width:50px;height:50px;background:#e8eaf6;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+        .stat-icon i{font-size:24px;color:#1e3c72;}
+        .stat-info{flex:1;}
+        .stat-label{font-size:0.75rem;color:#666;}
+        .stat-value{font-size:1.4rem;font-weight:bold;color:#1a1a2e;}
+        
+        .search-section{background:white;border-radius:16px;padding:16px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+        .search-box{flex:3;position:relative;min-width:200px;}
+        .search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#999;}
+        .search-box input{width:100%;padding:12px 12px 12px 42px;border:2px solid #e0e0e0;border-radius:12px;}
+        .mic-btn{background:#1e3c72;color:white;border:none;width:45px;height:45px;border-radius:12px;cursor:pointer;}
+        .mic-btn.listening{background:#dc3545;animation:pulse 1s infinite;}
+        @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+        .filter-group{display:flex;gap:8px;flex-wrap:wrap;}
+        .filter-btn{padding:8px 18px;border:2px solid #e0e0e0;background:white;border-radius:25px;cursor:pointer;}
+        .filter-btn.active{background:#1e3c72;color:white;}
+        .add-customer-btn{background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;border:none;padding:10px 22px;border-radius:12px;cursor:pointer;}
+        
+        .table-container{background:white;border-radius:16px;overflow-x:auto;}
+        .customers-table{width:100%;border-collapse:collapse;min-width:800px;}
+        .customers-table th{padding:14px;text-align:left;border-bottom:2px solid #e0e0e0;}
+        .customers-table td{padding:12px 14px;border-bottom:1px solid #e0e0e0;}
+        .due-row{border-left:3px solid #dc3545;}
+        .due-amount-value{color:#dc3545;font-weight:600;}
+        .action-buttons{display:flex;gap:8px;}
+        .action-btn{background:none;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;}
+        .receive-action{color:#28a745;}
+        .edit-action{color:#ffc107;}
+        .delete-action{color:#dc3545;}
+        
+        .reminder-panel,.collection-panel{background:white;border-radius:16px;overflow:hidden;}
+        .reminder-header{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:white;padding:15px;display:flex;justify-content:space-between;}
+        .collection-header{background:linear-gradient(135deg,#28a745,#20c997);color:white;padding:15px;display:flex;justify-content:space-between;}
+        .reminder-list,.collection-list{max-height:350px;overflow-y:auto;}
+        .reminder-item{padding:12px;border-bottom:1px solid #eee;display:flex;gap:10px;align-items:center;}
+        .collection-empty{padding:30px;text-align:center;color:#999;}
+        
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:3000;display:none;}
+        .modal-container{background:white;border-radius:24px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto;}
+        .modal-header{padding:20px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;}
+        .modal-body{padding:20px;}
+        .modal-footer{padding:20px;border-top:1px solid #eee;display:flex;gap:10px;justify-content:flex-end;}
+        .form-group{margin-bottom:15px;}
+        .form-group label{display:block;margin-bottom:5px;font-weight:500;}
+        .form-group input,.form-group select{width:100%;padding:10px;border:2px solid #e0e0e0;border-radius:10px;}
+        
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:white;padding:12px 24px;border-radius:50px;z-index:4000;display:none;}
+        
+        @media (max-width:768px){.main-container{flex-direction:column;}.side-panels{width:100%;}}
     </style>
 </head>
 <body>
 
-<!-- LOGIN SECTION -->
+<!-- Login Screen -->
 <div class="login-screen" id="loginScreen">
     <div class="login-card">
-        <div class="login-brand">
-            <div class="logo-circle"><i class="fas fa-database"></i></div>
-            <h2>FinCollect Pro</h2>
-            <p>MySQL Enterprise Due Management</p>
-        </div>
-        <div id="loginError" class="error-message"></div>
-        <div class="role-switch">
-            <div class="role-tab active" data-role="admin" data-user="admin" data-pass="admin123">Administrator</div>
-            <div class="role-tab" data-role="user" data-user="user" data-pass="user123">Collection Officer</div>
-        </div>
-        <form id="smartLoginForm">
-            <div class="input-group"><label>USERNAME</label><input type="text" id="loginUsername" placeholder="Enter username" autocomplete="off"></div>
-            <div class="input-group"><label>PASSWORD</label><input type="password" id="loginPassword" placeholder="••••••"></div>
-            <button type="submit" class="login-button"><i class="fas fa-arrow-right-to-bracket"></i> SIGN IN</button>
-        </form>
+        <div class="login-icon"><i class="fas fa-hand-holding-usd"></i></div>
+        <h2>Customer Due Manager</h2>
+        <p>Pakistan Payment Collection System</p>
+        
+        <select id="loginRole" class="login-input">
+            <option value="admin">👑 Administrator</option>
+            <option value="user">👤 Staff User</option>
+        </select>
+        <input type="text" id="loginUsername" class="login-input" placeholder="Username" value="admin">
+        <input type="password" id="loginPassword" class="login-input" placeholder="Password" value="admin123">
+        <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <div class="login-error" id="loginError">Invalid credentials</div>
     </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="app-container" id="mainApp">
-    <div class="premium-header">
-        <div class="brand">
-            <div class="brand-icon"><i class="fas fa-coins"></i></div>
-            <h1>Due Manager <span class="pkr-tag">PKR</span><span id="dbStatusIndicator" class="db-status db-offline">LOCAL MODE</span></h1>
-        </div>
-        <div class="header-tools">
-            <span class="role-indicator" id="userRoleSpan">Admin</span>
-            <button class="tool-icon sync-btn" id="syncDatabaseBtn"><i class="fas fa-sync-alt"></i> Sync DB</button>
-            <button class="tool-icon" id="importCsvBtn"><i class="fas fa-upload"></i> Import</button>
-            <button class="tool-icon" id="exportFullBtn"><i class="fas fa-download"></i> Export All</button>
-            <button class="tool-icon" id="exportFilteredBtn"><i class="fas fa-filter"></i> Filtered</button>
-            <button class="tool-icon logout-icon" id="logoutGlobalBtn"><i class="fas fa-sign-out-alt"></i> Exit</button>
-        </div>
+<!-- Main App -->
+<div class="app" id="app">
+    <div class="app-header">
+        <div class="logo"><i class="fas fa-hand-holding-usd"></i><h1>Customer Due Manager <span class="pkr-badge">PKR</span></h1></div>
+        <div class="user-info" id="userInfo"></div>
     </div>
 
-    <div class="stat-cards">
-        <div class="stat-item"><div class="stat-icon-bg"><i class="fas fa-users fa-xl"></i></div><div><div class="stat-label" style="font-size:0.7rem; font-weight:800;">TOTAL CUSTOMERS</div><div class="stat-value" id="totalCustomerCount" style="font-size:1.9rem; font-weight:800;">0</div></div></div>
-        <div class="stat-item"><div class="stat-icon-bg"><i class="fas fa-rupee-sign"></i></div><div><div class="stat-label">ORIGINAL DUE</div><div class="stat-value" id="totalOriginalDue">PKR 0</div></div></div>
-        <div class="stat-item"><div class="stat-icon-bg"><i class="fas fa-hourglass-half"></i></div><div><div class="stat-label">REMAINING DUE</div><div class="stat-value" id="totalRemainingDueVal">PKR 0</div></div></div>
-    </div>
+    <div class="main-container">
+        <div class="list-view">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><span class="stat-label">Total Customers</span><span class="stat-value" id="totalCustomers">0</span></div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-rupee-sign"></i></div><div class="stat-info"><span class="stat-label">Total Due</span><span class="stat-value" id="totalAmount">PKR 0</span></div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div><div class="stat-info"><span class="stat-label">Remaining Due</span><span class="stat-value" id="totalDue">PKR 0</span></div></div>
+            </div>
 
-    <div class="search-bar-area">
-        <div class="search-flex">
-            <i class="fas fa-search"></i>
-            <input type="text" id="globalSearchInput" placeholder="Search by name, CNIC, city, phone, reference...">
-            <button class="mic-search-btn" id="voiceMicBtn"><i class="fas fa-microphone"></i></button>
-        </div>
-        <div class="filter-group">
-            <button class="filter-chip active" data-filter="all">All</button>
-            <button class="filter-chip" data-filter="due">Pending Due</button>
-            <button class="filter-chip" data-filter="cleared">Cleared</button>
-        </div>
-        <button class="add-customer" id="openAddCustomerModal"><i class="fas fa-plus-circle"></i> Add Customer</button>
-    </div>
+            <div class="search-section">
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by name, phone, city..."></div>
+                <button class="mic-btn" id="micBtn"><i class="fas fa-microphone"></i></button>
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="due">Has Due</button>
+                    <button class="filter-btn" data-filter="cleared">Cleared</button>
+                </div>
+                <button class="add-customer-btn" id="showAddBtn"><i class="fas fa-plus"></i> Add Customer</button>
+            </div>
 
-    <div class="two-column">
-        <div class="data-table-wrap">
-            <table class="modern-table">
-                <thead>
-                    <tr><th>Photo</th><th>ID</th><th>Name</th><th>CNIC</th><th>City</th><th>Reference</th><th>Due (PKR)</th><th>Actions</th></tr>
-                </thead>
-                <tbody id="customersTbody"></tbody>
-            <table>
+            <div class="table-container">
+                <table class="customers-table">
+                    <thead><tr><th>ID</th><th>Name</th><th>CNIC</th><th>City</th><th>Phone</th><th>Reference</th><th>Due (PKR)</th><th>Actions</th></tr></thead>
+                    <tbody id="customersList"><tr><td colspan="8" class="collection-empty">Loading...</td></tr></tbody>
+                </table>
+            </div>
         </div>
-        <div class="right-panels">
-            <div class="info-card"><div class="card-header"><span><i class="fas fa-bell"></i> Overdue Alerts</span><span id="reminderCountSpan">0</span></div><div id="reminderListArea" class="reminder-list" style="max-height:280px; overflow:auto;"></div></div>
-            <div class="info-card"><div class="card-header"><span><i class="fas fa-wallet"></i> Today's Collection</span><span id="todayCollectionSpan">PKR 0</span></div><div id="collectionListArea" style="max-height:280px; overflow:auto;"></div></div>
+
+        <div class="side-panels">
+            <div class="reminder-panel"><div class="reminder-header"><h3><i class="fas fa-bell"></i> Reminders</h3><span id="reminderCount">0</span></div><div id="reminderList" class="reminder-list"></div></div>
+            <div class="collection-panel"><div class="collection-header"><h3><i class="fas fa-money-bill-wave"></i> Today's Collection</h3><span id="todayCollectionTotal">PKR 0</span></div><div id="todayCollectionList" class="collection-list"></div></div>
         </div>
     </div>
 </div>
 
-<!-- MODAL WITH CROSS ICON -->
-<div id="customerFormModal" class="modal-mask">
-    <div class="modal-content">
-        <button class="modal-close-x" id="closeModalCrossBtn"><i class="fas fa-times"></i></button>
-        <h3 style="margin-bottom: 24px; font-size: 1.5rem;"><i class="fas fa-user-plus"></i> Customer Details</h3>
-        <form id="customerDynamicForm">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
-                <div class="full-width" style="grid-column:span 2;"><label>Full Name *</label><input type="text" id="fullNameField" required style="width:100%; padding:12px; border-radius:24px;"></div>
-                <div><label>CNIC</label><input type="text" id="cnicField"></div><div><label>Phone *</label><input type="text" id="phoneField" required></div>
-                <div><label>Email</label><input type="email" id="emailField"></div><div><label>City *</label><input type="text" id="cityField" required></div>
-                <div><label>Due Amount</label><input type="number" id="dueField" value="0"></div><div><label>Address</label><input type="text" id="addressField"></div>
-                <div><label>Reference Name</label><input type="text" id="refNameField"></div><div><label>Reference Contact</label><input type="text" id="refContactField"></div>
-                <div><label>Promise Date</label><input type="date" id="promiseDateField"></div><div><label>Business/CO</label><input type="text" id="coField"></div>
-                <div><label>Colony</label><input type="text" id="colonyField"></div><div class="full-width" style="grid-column:span 2;"><label>Reason</label><input type="text" id="reasonField"></div>
-            </div>
-            <div style="background:#fafcff; border-radius:24px; padding:16px; margin-top:20px;">
-                <div style="display:flex; justify-content:space-between;"><span>Customer Photo</span><button type="button" id="removePhotoModalBtn" style="background:#fee2e2; border:none; padding:4px 14px; border-radius:40px;">Remove</button></div>
-                <div id="photoPreviewModal" style="text-align:center; margin:10px;"><i class="fas fa-user-circle fa-4x" style="color:#cbd5e1;"></i></div>
-                <input type="file" id="photoFileModal" accept="image/*" style="display:none"><button type="button" id="uploadPhotoModalBtn" style="background:#eef2ff; border:none; padding:8px; width:100%; border-radius:50px;">Upload Photo</button>
-            </div>
-            <div style="background:#fafcff; border-radius:24px; padding:16px; margin-top:14px;">
-                <div style="display:flex; justify-content:space-between;"><span>Bill/Document</span><button type="button" id="removeBillModalBtn" style="background:#fee2e2; border:none; padding:4px 14px; border-radius:40px;">Remove</button></div>
-                <div id="billPreviewModal" style="text-align:center; margin:10px;"><i class="fas fa-file-invoice fa-3x" style="color:#cbd5e1;"></i></div>
-                <input type="file" id="billFileModal" accept="image/*" style="display:none"><button type="button" id="uploadBillModalBtn" style="background:#eef2ff; border:none; padding:8px; width:100%; border-radius:50px;">Upload Bill</button>
-            </div>
-            <div style="display:flex; justify-content:flex-end; gap:14px; margin-top:28px;"><button type="button" id="cancelModalBtn" class="tool-icon">Cancel</button><button type="submit" class="login-button" style="width:auto; padding:10px 32px;">Save Customer</button></div>
-        </form>
+<!-- Add Customer Modal -->
+<div class="modal-overlay" id="customerModal">
+    <div class="modal-container">
+        <div class="modal-header"><h3>Add Customer</h3><button class="modal-close" onclick="closeModal()">&times;</button></div>
+        <div class="modal-body">
+            <input type="hidden" id="editId">
+            <div class="form-group"><label>Name *</label><input type="text" id="custName" placeholder="Full name"></div>
+            <div class="form-group"><label>CNIC</label><input type="text" id="custCNIC" placeholder="CNIC"></div>
+            <div class="form-group"><label>Phone</label><input type="text" id="custPhone" placeholder="Phone"></div>
+            <div class="form-group"><label>City *</label><input type="text" id="custCity" placeholder="City"></div>
+            <div class="form-group"><label>Due Amount</label><input type="number" id="custDue" placeholder="Due amount"></div>
+            <div class="form-group"><label>Reference</label><input type="text" id="custReference" placeholder="Reference name"></div>
+            <div class="form-group"><label>Promise Date</label><input type="date" id="custPromiseDate"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="add-customer-btn" onclick="saveCustomer()">Save</button>
+            <button class="filter-btn" onclick="closeModal()">Cancel</button>
+        </div>
     </div>
 </div>
 
-<div id="zoomImageModal" class="modal-mask" style="background:rgba(0,0,0,0.9); z-index:5000;"><img id="zoomPreviewImage" style="max-width:90%; max-height:90%; border-radius:28px;"></div>
-<div id="globalToastMsg" class="toast-message"></div>
+<!-- Payment Modal -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal-container">
+        <div class="modal-header"><h3>Receive Payment</h3><button class="modal-close" onclick="closePaymentModal()">&times;</button></div>
+        <div class="modal-body">
+            <div class="form-group"><label>Customer</label><input type="text" id="payCustomerName" readonly></div>
+            <div class="form-group"><label>Remaining Due</label><input type="text" id="payRemainingDue" readonly></div>
+            <div class="form-group"><label>Amount</label><input type="number" id="payAmount" placeholder="Enter amount"></div>
+            <div class="form-group"><label>Payment Method</label><select id="payMethod"><option value="cash">Cash</option><option value="bank">Bank</option></select></div>
+        </div>
+        <div class="modal-footer">
+            <button class="add-customer-btn" onclick="submitPayment()">Pay</button>
+            <button class="filter-btn" onclick="closePaymentModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
 
 <script>
-    // Configuration - Fixed for Railway
-    const API_BASE_URL = '';
+// ============ GLOBAL VARIABLES ============
+let currentUser = null;
+let currentCustomerId = null;
+let currentFilter = 'all';
+let currentSearch = '';
+
+// ============ LOGIN (Hardcoded) ============
+function login() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const role = document.getElementById('loginRole').value;
     
-    // Hardcoded users
-    const USER_CRED = { 
-        admin: { password: "admin123", role: "admin", label: "Admin" }, 
-        user: { password: "user123", role: "user", label: "Collection Officer" } 
-    };
-    
-    const CUST_STORAGE = "premium_customers_v2";
-    const PAY_STORAGE = "premium_payments_v2";
-    
-    let currentSession = null, allCustomers = [], currentFilter = "all", currentSearchText = "";
-    let editModeId = null, tempPhoto = "", tempBill = "";
-    let isDbConnected = false;
-    
-    function showToast(msg, isErr = false) { 
-        let t = document.getElementById("globalToastMsg"); 
-        t.textContent = msg; 
-        t.style.backgroundColor = isErr ? "#dc2626" : "#0f172a"; 
-        t.style.display = "block"; 
-        setTimeout(() => t.style.display = "none", 2700); 
-    }
-    
-    function formatPKR(val) { 
-        return "PKR " + new Intl.NumberFormat('en-PK').format(val || 0); 
-    }
-    
-    function escapeHtml(str) { 
-        if(!str) return ""; 
-        return String(str).replace(/[&<>]/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[m])); 
-    }
-    
-    async function apiCall(endpoint, options = {}) {
-        try {
-            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                ...options,
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...options.headers
-                }
-            });
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('API Error:', error);
-            return { success: false, error: error.message };
-        }
-    }
-    
-    async function fetchCustomersFromDB() {
-        const result = await apiCall('/api/customers');
-        if (result.success && result.data) {
-            return result.data.map(c => ({
-                id: c.id,
-                name: c.name,
-                cnic: c.cnic || '',
-                phone: c.phone,
-                email: c.email || '',
-                city: c.city,
-                dueAmount: parseFloat(c.due_amount),
-                totalPaid: parseFloat(c.total_paid),
-                remainingDue: parseFloat(c.remaining_due),
-                address: c.address || '',
-                referenceName: c.reference_name || '',
-                referenceContact: c.reference_contact || '',
-                promiseDate: c.promise_date || '',
-                co: c.business_co || '',
-                colony: c.colony || '',
-                reason: c.reason || '',
-                photoData: c.photo_data || '',
-                billPhotoData: c.bill_photo_data || '',
-                entryDate: c.entry_date
-            }));
-        }
-        return null;
-    }
-    
-    async function addCustomerToDB(customerData) {
-        const result = await apiCall('/api/customers', {
-            method: 'POST',
-            body: JSON.stringify(customerData)
-        });
-        return result;
-    }
-    
-    async function updateCustomerInDB(id, customerData) {
-        const result = await apiCall(`/api/customers/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(customerData)
-        });
-        return result;
-    }
-    
-    async function deleteCustomerFromDB(id) {
-        const result = await apiCall(`/api/customers/${id}`, {
-            method: 'DELETE'
-        });
-        return result;
-    }
-    
-    async function addPaymentToDB(paymentData) {
-        const result = await apiCall('/api/payments', {
-            method: 'POST',
-            body: JSON.stringify(paymentData)
-        });
-        return result;
-    }
-    
-    async function fetchDashboardStats() {
-        const result = await apiCall('/api/dashboard/stats');
-        if (result.success) {
-            return result.data;
-        }
-        return null;
-    }
-    
-    async function fetchOverdueReminders() {
-        const result = await apiCall('/api/reminders/overdue');
-        if (result.success) {
-            return result.data;
-        }
-        return [];
-    }
-    
-    async function fetchTodayPayments() {
-        const today = new Date().toISOString().slice(0,10);
-        const result = await apiCall(`/api/payments?date=${today}`);
-        if (result.success) {
-            return result.data;
-        }
-        return [];
-    }
-    
-    function loadCustomersFromLocal() { 
-        return JSON.parse(localStorage.getItem(CUST_STORAGE) || "[]"); 
-    }
-    
-    function saveCustomersToLocal(arr) { 
-        localStorage.setItem(CUST_STORAGE, JSON.stringify(arr)); 
-    }
-    
-    function loadPaymentsFromLocal() { 
-        return JSON.parse(localStorage.getItem(PAY_STORAGE) || "[]"); 
-    }
-    
-    function savePaymentsToLocal(arr) { 
-        localStorage.setItem(PAY_STORAGE, JSON.stringify(arr)); 
-    }
-    
-    async function syncLocalToDatabase() {
-        if (!isDbConnected) {
-            showToast("Database not connected", true);
-            return false;
+    if ((username === 'admin' && password === 'admin123') || 
+        (username === 'user' && password === 'user123')) {
+        
+        currentUser = {
+            username: username,
+            fullName: username === 'admin' ? 'Administrator' : 'Staff User',
+            role: username,
+            roleDisplay: username === 'admin' ? '👑 Admin' : '👤 Staff'
+        };
+        
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('userInfo').innerHTML = `
+            <i class="fas fa-user-circle"></i>
+            <span>${currentUser.fullName}</span>
+            <span class="role-badge ${currentUser.role}">${currentUser.roleDisplay}</span>
+            <button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+        `;
+        
+        if (currentUser.role !== 'admin') {
+            document.querySelectorAll('.delete-action, .edit-action').forEach(el => el.style.display = 'none');
         }
         
-        showToast("Syncing data to database...", false);
-        const localCustomers = loadCustomersFromLocal();
-        let synced = 0;
+        loadData();
+        showToast('Welcome ' + currentUser.fullName + '!', 'success');
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+        setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
+    }
+}
+
+function logout() {
+    currentUser = null;
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    showToast('Logged out', 'success');
+}
+
+// ============ API CALLS ============
+async function apiCall(endpoint, options = {}) {
+    const res = await fetch(`/api${endpoint}`, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+    });
+    return res.json();
+}
+
+// ============ LOAD DATA ============
+async function loadData() {
+    await loadCustomers();
+    await loadStats();
+    await loadTodayCollections();
+}
+
+async function loadCustomers() {
+    try {
+        let url = `/customers?filter=${currentFilter}`;
+        if (currentSearch) url += `&search=${encodeURIComponent(currentSearch)}`;
         
-        for (const customer of localCustomers) {
-            if (customer.id > 10000) {
-                const result = await addCustomerToDB(customer);
-                if (result.success) synced++;
-            }
+        const result = await apiCall(url);
+        const customers = result.data || [];
+        
+        const tbody = document.getElementById('customersList');
+        if (customers.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="collection-empty">No customers found</td></tr>';
+            return;
         }
         
-        showToast(`Synced ${synced} customers to database`, false);
-        await loadDataFromDatabase();
-        return true;
-    }
-    
-    async function loadDataFromDatabase() {
-        if (!isDbConnected) return false;
-        
-        try {
-            const dbCustomers = await fetchCustomersFromDB();
-            if (dbCustomers) {
-                allCustomers = dbCustomers;
-                saveCustomersToLocal(allCustomers);
-                
-                const stats = await fetchDashboardStats();
-                if (stats) {
-                    document.getElementById("totalCustomerCount").innerText = stats.totalCustomers || 0;
-                    document.getElementById("totalOriginalDue").innerHTML = formatPKR(stats.totalOriginalDue || 0);
-                    document.getElementById("totalRemainingDueVal").innerHTML = formatPKR(stats.totalRemainingDue || 0);
-                }
-                
-                const overdue = await fetchOverdueReminders();
-                document.getElementById("reminderCountSpan").innerText = overdue.length;
-                document.getElementById("reminderListArea").innerHTML = overdue.length ? 
-                    overdue.map(r => `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
-                        <i class="fas fa-bell" style="color:#ea580c"></i> 
-                        <strong>${escapeHtml(r.name)}</strong><br>
-                        <small>Due: ${formatPKR(r.remaining_due)}</small>
-                    </div>`).join('') : 
-                    '<div class="empty-message" style="padding:30px; text-align:center;">No reminders</div>';
-                
-                const todayPayments = await fetchTodayPayments();
-                const totalToday = todayPayments.reduce((sum, p) => sum + parseFloat(p.amount), 0);
-                document.getElementById("todayCollectionSpan").innerHTML = formatPKR(totalToday);
-                document.getElementById("collectionListArea").innerHTML = todayPayments.length ?
-                    todayPayments.map(p => `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
-                        <i class="fas fa-coins"></i> ${escapeHtml(p.customer_name)} +${formatPKR(p.amount)}
-                    </div>`).join('') :
-                    '<div style="padding:30px; text-align:center;">No collections today</div>';
-                
-                renderFilteredCustomers();
-                return true;
-            }
-        } catch (error) {
-            console.error('Database load error:', error);
-        }
-        return false;
-    }
-    
-    function recalcDue() {
-        let custs = loadCustomersFromLocal();
-        let pays = loadPaymentsFromLocal();
-        let updated = custs.map(c => {
-            let paid = pays.filter(p => p.customerId === c.id).reduce((s,p)=> s + p.amount, 0);
-            return { ...c, totalPaid: paid, remainingDue: Math.max(0, (c.dueAmount || 0) - paid) };
-        });
-        saveCustomersToLocal(updated);
-        return updated;
-    }
-    
-    function getFiltered() {
-        let data = [...allCustomers];
-        if(currentSearchText.trim()) { 
-            let kw = currentSearchText.toLowerCase(); 
-            data = data.filter(c => c.name?.toLowerCase().includes(kw) || 
-                (c.cnic && c.cnic.includes(kw)) || 
-                (c.city?.toLowerCase().includes(kw)) || 
-                (c.phone && c.phone.includes(kw)) || 
-                (c.referenceName?.toLowerCase().includes(kw))); 
-        }
-        if(currentFilter === "due") data = data.filter(c => c.remainingDue > 0);
-        if(currentFilter === "cleared") data = data.filter(c => c.remainingDue === 0);
-        return data;
-    }
-    
-    function renderFilteredCustomers() {
-        let filtered = getFiltered();
-        let isAdmin = currentSession?.role === "admin";
-        let tbody = document.getElementById("customersTbody");
-        if(!filtered.length) { 
-            tbody.innerHTML = `<tr><td colspan="8" style="padding:40px; text-align:center;">No customers found</td></tr>`; 
-        }
-        else {
-            tbody.innerHTML = filtered.map(c => `<tr class="${c.remainingDue > 0 ? 'due-highlight' : ''}">
-                <td>${c.photoData ? `<img src="${c.photoData}" class="photo-round" onclick="zoomImage('${c.photoData}')">` : '<i class="fas fa-user-circle fa-2x" style="color:#94a3b8;"></i>'}</td>
-                <td>#${c.id}</td><td><strong>${escapeHtml(c.name)}</strong></td>
-                <td>${escapeHtml(c.cnic || '—')}</td><td>${escapeHtml(c.city || '—')}</td>
-                <td>${escapeHtml(c.referenceName || '—')}</td>
-                <td style="font-weight:700;${c.remainingDue>0?'color:#b91c1c':''}">${formatPKR(c.remainingDue)}</td>
-                <td class="action-group">
-                    <button class="action-badge receive-icon" style="color:#10b981;" onclick="quickReceive(${c.id}, ${c.remainingDue}, '${escapeHtml(c.name)}')">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </button>
-                    ${isAdmin ? `<button class="action-badge" style="color:#f59e0b;" onclick="editCustomer(${c.id})"><i class="fas fa-edit"></i></button>
-                    <button class="action-badge" style="color:#ef4444;" onclick="deleteCustomerById(${c.id}, '${escapeHtml(c.name)}')"><i class="fas fa-trash"></i></button>` : ''}
+        tbody.innerHTML = customers.map(c => `
+            <tr class="${c.remaining_due > 0 ? 'due-row' : ''}">
+                <td>#${c.id}</td>
+                <td><strong>${escapeHtml(c.name)}</strong></td>
+                <td>${escapeHtml(c.cnic || '—')}</td>
+                <td>${escapeHtml(c.city || '—')}</td>
+                <td>${escapeHtml(c.phone || '—')}</td>
+                <td>${escapeHtml(c.reference_name || '—')}</td>
+                <td class="${c.remaining_due > 0 ? 'due-amount-value' : ''}">${formatPKR(c.remaining_due)}</td>
+                <td class="action-buttons">
+                    <button class="action-btn receive-action" onclick="openPaymentModal(${c.id}, '${escapeHtml(c.name)}', ${c.remaining_due})"><i class="fas fa-money-bill-wave"></i></button>
+                    ${currentUser?.role === 'admin' ? `
+                        <button class="action-btn edit-action" onclick="openEditModal(${c.id})"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete-action" onclick="deleteCustomer(${c.id})"><i class="fas fa-trash"></i></button>
+                    ` : ''}
                 </td>
-            </tr>`).join("");
-        }
-        
-        if (!isDbConnected) {
-            let totalOrig = allCustomers.reduce((s,c)=> s + (c.dueAmount || 0),0);
-            let totalRem = allCustomers.reduce((s,c)=> s + (c.remainingDue || 0),0);
-            document.getElementById("totalCustomerCount").innerText = allCustomers.length;
-            document.getElementById("totalOriginalDue").innerHTML = formatPKR(totalOrig);
-            document.getElementById("totalRemainingDueVal").innerHTML = formatPKR(totalRem);
-            
-            let today = new Date().toISOString().slice(0,10);
-            let overdue = allCustomers.filter(c => c.remainingDue > 0 && c.promiseDate && c.promiseDate <= today).slice(0,6);
-            document.getElementById("reminderCountSpan").innerText = overdue.length;
-            document.getElementById("reminderListArea").innerHTML = overdue.length ? 
-                overdue.map(r => `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
-                    <i class="fas fa-bell" style="color:#ea580c"></i> 
-                    <strong>${escapeHtml(r.name)}</strong><br>
-                    <small>Due: ${formatPKR(r.remainingDue)}</small>
-                </div>`).join('') : 
-                '<div class="empty-message" style="padding:30px; text-align:center;">No reminders</div>';
-            
-            let payments = loadPaymentsFromLocal();
-            let todayPay = payments.filter(p => p.date === today);
-            let totalToday = todayPay.reduce((s,p)=> s + p.amount,0);
-            document.getElementById("todayCollectionSpan").innerHTML = formatPKR(totalToday);
-            document.getElementById("collectionListArea").innerHTML = todayPay.length ? 
-                todayPay.map(p => { let c = allCustomers.find(cx => cx.id === p.customerId); 
-                    return `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
-                        <i class="fas fa-coins"></i> ${escapeHtml(c?.name || 'Unknown')} +${formatPKR(p.amount)}
-                    </div>`; 
-                }).join('') : 
-                '<div style="padding:30px; text-align:center;">No collections today</div>';
-        }
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading customers:', error);
+    }
+}
+
+async function loadStats() {
+    const result = await apiCall('/stats');
+    const stats = result.data || {};
+    document.getElementById('totalCustomers').textContent = stats.totalCustomers || 0;
+    document.getElementById('totalAmount').textContent = formatPKR(stats.totalAmount || 0);
+    document.getElementById('totalDue').textContent = formatPKR(stats.totalDue || 0);
+}
+
+async function loadTodayCollections() {
+    const result = await apiCall('/today-collections');
+    document.getElementById('todayCollectionTotal').textContent = formatPKR(result.total || 0);
+}
+
+// ============ CUSTOMER CRUD ============
+async function saveCustomer() {
+    const name = document.getElementById('custName').value.trim();
+    const city = document.getElementById('custCity').value.trim();
+    
+    if (!name || !city) {
+        showToast('Name and City are required', 'error');
+        return;
     }
     
-    window.quickReceive = async (id, dueRem, name) => { 
-        if(dueRem<=0) return showToast("No pending dues", true); 
-        let amt = parseFloat(prompt(`Enter payment for ${name}\nMax: ${formatPKR(dueRem)}`)); 
-        if(isNaN(amt) || amt<=0 || amt>dueRem) return; 
+    const customer = {
+        name: name,
+        cnic: document.getElementById('custCNIC').value,
+        phone: document.getElementById('custPhone').value,
+        city: city,
+        due_amount: parseFloat(document.getElementById('custDue').value) || 0,
+        reference_name: document.getElementById('custReference').value,
+        promise_date: document.getElementById('custPromiseDate').value,
+        entry_date: new Date().toISOString().split('T')[0]
+    };
+    
+    const editId = document.getElementById('editId').value;
+    let result;
+    
+    if (editId) {
+        result = await apiCall(`/customers/${editId}`, { method: 'PUT', body: JSON.stringify(customer) });
+    } else {
+        result = await apiCall('/customers', { method: 'POST', body: JSON.stringify(customer) });
+    }
+    
+    if (result.success) {
+        showToast(editId ? 'Customer updated!' : 'Customer added!', 'success');
+        closeModal();
+        loadData();
+    } else {
+        showToast('Operation failed', 'error');
+    }
+}
+
+async function deleteCustomer(id) {
+    if (!confirm('Delete this customer?')) return;
+    const result = await apiCall(`/customers/${id}`, { method: 'DELETE' });
+    if (result.success) {
+        showToast('Deleted!', 'success');
+        loadData();
+    }
+}
+
+async function openEditModal(id) {
+    const result = await apiCall(`/customers/${id}`);
+    const c = result.data;
+    if (c) {
+        document.getElementById('editId').value = c.id;
+        document.getElementById('custName').value = c.name || '';
+        document.getElementById('custCNIC').value = c.cnic || '';
+        document.getElementById('custPhone').value = c.phone || '';
+        document.getElementById('custCity').value = c.city || '';
+        document.getElementById('custDue').value = c.due_amount || 0;
+        document.getElementById('custReference').value = c.reference_name || '';
+        document.getElementById('custPromiseDate').value = c.promise_date || '';
+        document.getElementById('customerModal').style.display = 'flex';
+    }
+}
+
+// ============ PAYMENT ============
+function openPaymentModal(id, name, due) {
+    currentCustomerId = id;
+    document.getElementById('payCustomerName').value = name;
+    document.getElementById('payRemainingDue').value = formatPKR(due);
+    document.getElementById('paymentModal').style.display = 'flex';
+}
+
+async function submitPayment() {
+    const amount = parseFloat(document.getElementById('payAmount').value);
+    if (!amount || amount <= 0) {
+        showToast('Enter valid amount', 'error');
+        return;
+    }
+    
+    const payment = {
+        customerId: currentCustomerId,
+        amount: amount,
+        paymentDate: new Date().toISOString().split('T')[0],
+        paymentMethod: document.getElementById('payMethod').value
+    };
+    
+    const result = await apiCall('/payments', { method: 'POST', body: JSON.stringify(payment) });
+    if (result.success) {
+        showToast(`Received ${formatPKR(amount)}`, 'success');
+        closePaymentModal();
+        loadData();
+    } else {
+        showToast('Payment failed', 'error');
+    }
+}
+
+// ============ VOICE SEARCH ============
+function startVoiceSearch() {
+    const btn = document.getElementById('micBtn');
+    if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.start();
+        btn.classList.add('listening');
         
-        const paymentData = {
-            customerId: id,
-            amount: amt,
-            date: new Date().toISOString().slice(0,10),
-            method: "Cash"
+        recognition.onresult = (event) => {
+            const text = event.results[0][0].transcript;
+            document.getElementById('searchInput').value = text;
+            currentSearch = text;
+            loadCustomers();
+            btn.classList.remove('listening');
         };
         
-        if (isDbConnected) {
-            const result = await addPaymentToDB(paymentData);
-            if (result.success) {
-                await loadDataFromDatabase();
-                showToast(`✓ Received ${formatPKR(amt)}`);
-            } else {
-                showToast("Error saving payment", true);
-            }
-        } else {
-            let pays = loadPaymentsFromLocal(); 
-            pays.push({ id: Date.now(), customerId: id, amount: amt, date: new Date().toISOString().slice(0,10), method: "Cash" }); 
-            savePaymentsToLocal(pays); 
-            refreshFull(); 
-            showToast(`✓ Received ${formatPKR(amt)}`);
-        }
-    };
-    
-    window.deleteCustomerById = async (id, name) => { 
-        if(currentSession?.role !== "admin") return showToast("Restricted", true); 
-        if(!confirm(`Delete ${name} permanently?`)) return; 
-        
-        if (isDbConnected) {
-            const result = await deleteCustomerFromDB(id);
-            if (result.success) {
-                await loadDataFromDatabase();
-                showToast(`Deleted ${name}`);
-            } else {
-                showToast("Error deleting customer", true);
-            }
-        } else {
-            let custs = loadCustomersFromLocal().filter(c => c.id !== id); 
-            let pays = loadPaymentsFromLocal().filter(p => p.customerId !== id); 
-            saveCustomersToLocal(custs); 
-            savePaymentsToLocal(pays); 
-            refreshFull(); 
-            showToast(`Deleted ${name}`);
-        }
-    };
-    
-    window.editCustomer = (id) => { 
-        if(currentSession?.role !== "admin") return showToast("Only admin edit", true); 
-        let cust = allCustomers.find(c => c.id === id); 
-        if(cust) { 
-            editModeId = id; 
-            document.getElementById("fullNameField").value = cust.name; 
-            document.getElementById("cnicField").value = cust.cnic||""; 
-            document.getElementById("phoneField").value = cust.phone; 
-            document.getElementById("emailField").value = cust.email||""; 
-            document.getElementById("cityField").value = cust.city; 
-            document.getElementById("dueField").value = cust.dueAmount; 
-            document.getElementById("addressField").value = cust.address||""; 
-            document.getElementById("refNameField").value = cust.referenceName||""; 
-            document.getElementById("refContactField").value = cust.referenceContact||""; 
-            document.getElementById("promiseDateField").value = cust.promiseDate||""; 
-            document.getElementById("coField").value = cust.co||""; 
-            document.getElementById("colonyField").value = cust.colony||""; 
-            document.getElementById("reasonField").value = cust.reason||""; 
-            tempPhoto = cust.photoData||""; 
-            tempBill = cust.billPhotoData||""; 
-            updatePhotoPreview(); 
-            updateBillPreview(); 
-            document.getElementById("customerFormModal").classList.add("active"); 
-        } 
-    };
-    
-    function updatePhotoPreview() { 
-        let cont = document.getElementById("photoPreviewModal"); 
-        cont.innerHTML = tempPhoto ? `<img src="${tempPhoto}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; cursor:pointer;" onclick="zoomImage('${tempPhoto}')">` : '<i class="fas fa-user-circle fa-4x" style="color:#cbd5e1;"></i>'; 
-    }
-    
-    function updateBillPreview() { 
-        let cont = document.getElementById("billPreviewModal"); 
-        cont.innerHTML = tempBill ? `<img src="${tempBill}" style="width:80px; height:80px; border-radius:16px; object-fit:cover; cursor:pointer;" onclick="zoomImage('${tempBill}')">` : '<i class="fas fa-file-invoice fa-3x" style="color:#cbd5e1;"></i>'; 
-    }
-    
-    window.zoomImage = (src) => { 
-        document.getElementById("zoomPreviewImage").src = src; 
-        document.getElementById("zoomImageModal").classList.add("active"); 
-    };
-    
-    document.getElementById("zoomImageModal").addEventListener("click", () => document.getElementById("zoomImageModal").classList.remove("active"));
-    
-    function resetModalFresh() { 
-        editModeId = null; 
-        tempPhoto = ""; 
-        tempBill = ""; 
-        document.getElementById("customerDynamicForm").reset(); 
-        document.getElementById("dueField").value = 0; 
-        updatePhotoPreview(); 
-        updateBillPreview(); 
-    }
-    
-    document.getElementById("openAddCustomerModal").onclick = () => { 
-        resetModalFresh(); 
-        document.getElementById("customerFormModal").classList.add("active"); 
-    };
-    
-    document.getElementById("closeModalCrossBtn").onclick = () => document.getElementById("customerFormModal").classList.remove("active");
-    document.getElementById("cancelModalBtn").onclick = () => document.getElementById("customerFormModal").classList.remove("active");
-    document.getElementById("uploadPhotoModalBtn").onclick = () => document.getElementById("photoFileModal").click();
-    document.getElementById("uploadBillModalBtn").onclick = () => document.getElementById("billFileModal").click();
-    
-    document.getElementById("photoFileModal").onchange = (e) => { 
-        let f = e.target.files[0]; 
-        if(f){ 
-            let rd = new FileReader(); 
-            rd.onload = ev => { 
-                tempPhoto = ev.target.result; 
-                updatePhotoPreview(); 
-            }; 
-            rd.readAsDataURL(f); 
-        } 
-    };
-    
-    document.getElementById("billFileModal").onchange = (e) => { 
-        let f = e.target.files[0]; 
-        if(f){ 
-            let rd = new FileReader(); 
-            rd.onload = ev => { 
-                tempBill = ev.target.result; 
-                updateBillPreview(); 
-            }; 
-            rd.readAsDataURL(f); 
-        } 
-    };
-    
-    document.getElementById("removePhotoModalBtn").onclick = () => { tempPhoto = ""; updatePhotoPreview(); };
-    document.getElementById("removeBillModalBtn").onclick = () => { tempBill = ""; updateBillPreview(); };
-    
-    document.getElementById("customerDynamicForm").addEventListener("submit", async (e) => { 
-        e.preventDefault(); 
-        let name = document.getElementById("fullNameField").value.trim(); 
-        let city = document.getElementById("cityField").value.trim(); 
-        let phone = document.getElementById("phoneField").value.trim(); 
-        if(!name || !city || !phone) return showToast("Name, City & Phone required", true); 
-        let due = parseFloat(document.getElementById("dueField").value) || 0; 
-        
-        const customerData = {
-            name: name,
-            cnic: document.getElementById("cnicField").value,
-            phone: phone,
-            email: document.getElementById("emailField").value,
-            city: city,
-            dueAmount: due,
-            address: document.getElementById("addressField").value,
-            referenceName: document.getElementById("refNameField").value,
-            referenceContact: document.getElementById("refContactField").value,
-            promiseDate: document.getElementById("promiseDateField").value,
-            co: document.getElementById("coField").value,
-            colony: document.getElementById("colonyField").value,
-            reason: document.getElementById("reasonField").value,
-            photoData: tempPhoto || "",
-            billPhotoData: tempBill || ""
+        recognition.onerror = () => {
+            btn.classList.remove('listening');
+            showToast('Voice search failed', 'error');
         };
-        
-        if (isDbConnected) {
-            let result;
-            if(editModeId) {
-                result = await updateCustomerInDB(editModeId, customerData);
-                if(result.success) {
-                    await loadDataFromDatabase();
-                    showToast("Customer updated");
-                } else {
-                    showToast("Error updating customer", true);
-                }
-            } else {
-                result = await addCustomerToDB(customerData);
-                if(result.success) {
-                    await loadDataFromDatabase();
-                    showToast(`✅ ${name} added`);
-                } else {
-                    showToast("Error adding customer", true);
-                }
-            }
-        } else {
-            let custs = loadCustomersFromLocal();
-            if(editModeId) { 
-                let idx = custs.findIndex(c => c.id === editModeId); 
-                if(idx !== -1) { 
-                    let updated = { ...custs[idx], ...customerData, dueAmount: due, remainingDue: Math.max(0, due - (custs[idx].totalPaid ||0)) }; 
-                    custs[idx] = updated; 
-                    saveCustomersToLocal(custs); 
-                    showToast("Customer updated"); 
-                } 
-            } else { 
-                let newId = Date.now() % 100000; 
-                custs.push({ 
-                    id: newId, 
-                    ...customerData, 
-                    totalPaid: 0, 
-                    remainingDue: due, 
-                    entryDate: new Date().toISOString().slice(0,10)
-                }); 
-                saveCustomersToLocal(custs); 
-                showToast(`✅ ${name} added`); 
-            } 
-            refreshFull();
+    } else {
+        showToast('Voice not supported', 'error');
+    }
+}
+
+// ============ HELPER FUNCTIONS ============
+function formatPKR(amount) {
+    return 'PKR ' + (amount || 0).toLocaleString();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+}
+
+function showToast(msg, type) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.background = type === 'error' ? '#dc3545' : '#28a745';
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 3000);
+}
+
+function closeModal() {
+    document.getElementById('customerModal').style.display = 'none';
+    document.getElementById('editId').value = '';
+    document.getElementById('custName').value = '';
+    document.getElementById('custCNIC').value = '';
+    document.getElementById('custPhone').value = '';
+    document.getElementById('custCity').value = '';
+    document.getElementById('custDue').value = '';
+    document.getElementById('custReference').value = '';
+    document.getElementById('custPromiseDate').value = '';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+    document.getElementById('payAmount').value = '';
+}
+
+// Search & Filter
+document.getElementById('searchInput')?.addEventListener('input', (e) => {
+    currentSearch = e.target.value;
+    loadCustomers();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        loadCustomers();
+    });
+});
+
+// Event Listeners
+document.getElementById('loginBtn').addEventListener('click', login);
+document.getElementById('showAddBtn').addEventListener('click', () => document.getElementById('customerModal').style.display = 'flex');
+document.getElementById('micBtn').addEventListener('click', startVoiceSearch);
+
+// Auto check saved session
+if (localStorage.getItem('user')) {
+    try {
+        currentUser = JSON.parse(localStorage.getItem('user'));
+        if (currentUser) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('userInfo').innerHTML = `
+                <i class="fas fa-user-circle"></i>
+                <span>${currentUser.fullName}</span>
+                <span class="role-badge ${currentUser.role}">${currentUser.roleDisplay}</span>
+                <button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+            `;
+            loadData();
         }
-        
-        document.getElementById("customerFormModal").classList.remove("active"); 
+    } catch(e) {}
+}
+
+// Load data on page load if logged in
+if (document.getElementById('app').style.display !== 'none') {
+    loadData();
+}
+
+// Close modals on outside click
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
     });
-    
-    function refreshFull() { 
-        allCustomers = recalcDue(); 
-        renderFilteredCustomers(); 
-    }
-    
-    document.getElementById("globalSearchInput").addEventListener("input", (e) => { 
-        currentSearchText = e.target.value; 
-        renderFilteredCustomers(); 
-    });
-    
-    document.querySelectorAll(".filter-chip").forEach(btn => { 
-        btn.addEventListener("click", () => { 
-            document.querySelectorAll(".filter-chip").forEach(b => b.classList.remove("active")); 
-            btn.classList.add("active"); 
-            currentFilter = btn.dataset.filter; 
-            renderFilteredCustomers(); 
-        }); 
-    });
-    
-    if('webkitSpeechRecognition' in window) { 
-        let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); 
-        recognition.lang = "en-PK"; 
-        document.getElementById("voiceMicBtn").addEventListener("click", () => { 
-            recognition.start(); 
-            showToast("🎤 Listening..."); 
-        }); 
-        recognition.onresult = (e) => { 
-            let spoken = e.results[0][0].transcript; 
-            document.getElementById("globalSearchInput").value = spoken; 
-            currentSearchText = spoken; 
-            renderFilteredCustomers(); 
-            showToast(`Searched: ${spoken}`); 
-        }; 
-    } else { 
-        document.getElementById("voiceMicBtn").style.display = "none"; 
-    }
-    
-    document.getElementById("importCsvBtn").onclick = () => { 
-        let inp = document.createElement("input"); 
-        inp.type="file"; 
-        inp.accept=".csv"; 
-        inp.onchange=(e)=>{ 
-            let f=e.target.files[0]; 
-            let reader=new FileReader(); 
-            reader.onload=(ev)=>{ 
-                let rows=ev.target.result.split("\n").slice(1); 
-                let existing=loadCustomersFromLocal(); 
-                rows.forEach(row=>{ 
-                    let cols=row.split(","); 
-                    let nm=cols[1]?.replace(/"/g,"").trim(); 
-                    if(nm){ 
-                        existing.push({ 
-                            id:Date.now()%100000+Math.floor(Math.random()*9000), 
-                            name:nm, 
-                            cnic:cols[2]?.replace(/"/g,"")||"", 
-                            phone:cols[3]?.replace(/"/g,"")||"", 
-                            email:"", 
-                            city:cols[4]?.replace(/"/g,"")||"Karachi", 
-                            dueAmount:parseFloat(cols[6])||0, 
-                            totalPaid:0, 
-                            remainingDue:parseFloat(cols[6])||0, 
-                            entryDate:new Date().toISOString().slice(0,10), 
-                            address:"", 
-                            referenceName:cols[8]?.replace(/"/g,"")||"", 
-                            referenceContact:"", 
-                            promiseDate:"", 
-                            co:"", 
-                            colony:"", 
-                            reason:"", 
-                            photoData:"", 
-                            billPhotoData:"" 
-                        }); 
-                    } 
-                }); 
-                saveCustomersToLocal(existing); 
-                refreshFull(); 
-                showToast("Import completed"); 
-                
-                if(isDbConnected) {
-                    syncLocalToDatabase();
-                }
-            }; 
-            reader.readAsText(f); 
-        }; 
-        inp.click(); 
-    };
-    
-    function exportCSV(filteredFlag) { 
-        let data = filteredFlag ? getFiltered() : allCustomers; 
-        if(!data.length) return showToast("No data", true); 
-        let headers = ["ID","Name","CNIC","Phone","City","DueAmount","Paid","Remaining","Reference"]; 
-        let rows = data.map(c => [c.id, `"${c.name}"`, `"${c.cnic||''}"`, `"${c.phone||''}"`, `"${c.city||''}"`, c.dueAmount, c.totalPaid, c.remainingDue, `"${c.referenceName||''}"`]); 
-        let blob = new Blob([headers.join(",")+"\n"+rows.map(r=>r.join(",")).join("\n")], {type:"text/csv"}); 
-        let a=document.createElement("a"); 
-        a.href=URL.createObjectURL(blob); 
-        a.download=`customers_${filteredFlag?"filtered":"all"}.csv`; 
-        a.click(); 
-        showToast(`Exported ${data.length} records`); 
-    }
-    
-    document.getElementById("exportFullBtn").onclick = () => exportCSV(false);
-    document.getElementById("exportFilteredBtn").onclick = () => exportCSV(true);
-    document.getElementById("syncDatabaseBtn").onclick = () => syncLocalToDatabase();
-    
-    async function checkDatabaseStatus() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/dashboard/stats`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    isDbConnected = true;
-                    const statusSpan = document.getElementById("dbStatusIndicator");
-                    statusSpan.textContent = "DB ONLINE";
-                    statusSpan.className = "db-status db-online";
-                    showToast("Connected to MySQL Database", false);
-                    await loadDataFromDatabase();
-                    return true;
-                }
-            }
-        } catch (error) {
-            console.log('Database not available, using localStorage');
-        }
-        isDbConnected = false;
-        const statusSpan = document.getElementById("dbStatusIndicator");
-        statusSpan.textContent = "LOCAL MODE";
-        statusSpan.className = "db-status db-offline";
-        return false;
-    }
-    
-    function doLogin(uname, pwd) { 
-        let user = USER_CRED[uname.toLowerCase()]; 
-        if(user && user.password === pwd) { 
-            currentSession = { username: uname, role: user.role, label: user.label }; 
-            document.getElementById("userRoleSpan").innerHTML = currentSession.role === "admin" ? "👑 Admin" : "👤 Officer"; 
-            
-            if(!localStorage.getItem(CUST_STORAGE)) { 
-                let demo = [{ 
-                    id:1005, 
-                    name:"Kamran Associates", 
-                    cnic:"", 
-                    phone:"03009998888", 
-                    email:"", 
-                    city:"Rawalpindi", 
-                    dueAmount:47000, 
-                    totalPaid:0, 
-                    remainingDue:47000, 
-                    entryDate:"2025-04-01", 
-                    address:"Commercial Market", 
-                    referenceName:"Imran", 
-                    referenceContact:"03331234567", 
-                    promiseDate:"2025-05-15", 
-                    co:"Kamran Corp", 
-                    colony:"Gulrez", 
-                    reason:"Balance", 
-                    photoData:"", 
-                    billPhotoData:"" 
-                }]; 
-                saveCustomersToLocal(demo); 
-                savePaymentsToLocal([]); 
-            }
-            
-            allCustomers = loadCustomersFromLocal();
-            renderFilteredCustomers();
-            document.getElementById("loginScreen").style.display = "none"; 
-            document.getElementById("mainApp").style.display = "block"; 
-            showToast(`Welcome ${user.label}`);
-            
-            setTimeout(() => checkDatabaseStatus(), 500);
-            return true; 
-        } 
-        return false; 
-    }
-    
-    document.getElementById("smartLoginForm").addEventListener("submit", (e) => { 
-        e.preventDefault(); 
-        let un = document.getElementById("loginUsername").value.trim(), 
-            pw = document.getElementById("loginPassword").value; 
-        if(!doLogin(un, pw)) { 
-            document.getElementById("loginError").innerText = "Invalid credentials (admin/admin123 or user/user123)"; 
-            document.getElementById("loginError").style.display = "block"; 
-        } 
-    });
-    
-    document.querySelectorAll(".role-tab").forEach(tab => { 
-        tab.addEventListener("click", () => { 
-            document.querySelectorAll(".role-tab").forEach(t=>t.classList.remove("active")); 
-            tab.classList.add("active"); 
-            let u = tab.dataset.user, p = tab.dataset.pass; 
-            document.getElementById("loginUsername").value = u; 
-            document.getElementById("loginPassword").value = p; 
-        }); 
-    });
-    
-    document.getElementById("logoutGlobalBtn").addEventListener("click", () => { 
-        currentSession = null; 
-        document.getElementById("mainApp").style.display = "none"; 
-        document.getElementById("loginScreen").style.display = "flex"; 
-        document.getElementById("loginUsername").value = ""; 
-        document.getElementById("loginPassword").value = ""; 
-        isDbConnected = false;
-    });
-    
-    if(!localStorage.getItem(CUST_STORAGE)) { 
-        let init = [{ 
-            id:1001, 
-            name:"Zara Traders", 
-            cnic:"", 
-            phone:"03001234567", 
-            email:"", 
-            city:"Karachi", 
-            dueAmount:25000, 
-            totalPaid:0, 
-            remainingDue:25000, 
-            entryDate:"2025-03-10", 
-            address:"Clifton", 
-            referenceName:"Ali", 
-            referenceContact:"", 
-            promiseDate:"2025-04-25", 
-            co:"", 
-            colony:"", 
-            reason:"", 
-            photoData:"", 
-            billPhotoData:"" 
-        }]; 
-        saveCustomersToLocal(init); 
-        savePaymentsToLocal([]); 
-    }
-    
-    allCustomers = loadCustomersFromLocal();
+});
 </script>
+</body>
+</html>
